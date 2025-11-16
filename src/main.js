@@ -1,8 +1,7 @@
 import 'bootstrap-icons/font/bootstrap-icons.css'
-import './css/base.css'
+import './style.css'
 import { criaHeader } from "./components/header.js";
 import { criaFooter } from "./components/footer.js";
-import { notificacoesPadrao } from "./data/notificacoes.js"
 
 export function montarLayout(){
     // Cria o header e o footer em todas as páginas
@@ -28,60 +27,6 @@ export function montarLayout(){
             menuLateral.style.width = '0';
         });
     }
-
-    // Botão de notificação
-    const btnNotificacao = document.getElementById('btn-notificacao');
-    const menuNotificacao = document.getElementById('menu-notificacao');
-    const listaNotificacao = document.getElementById('lista-notificacao');
-    const contador = document.getElementById('contador');
-
-    let notificacoes = JSON.parse(localStorage.getItem('notificacoes')) || notificacoesPadrao;
-
-    if (!localStorage.getItem('notificacoes')) {
-    localStorage.setItem('notificacoes', JSON.stringify(notificacoesPadrao));}
-
-    function renderNotificacao(){
-        listaNotificacao.innerHTML = '';
-
-        notificacoes.forEach((n, index) => {
-            const li = document.createElement('li');
-            li.textContent = n.mensagem;
-            li.classList.add('notificacao-item');
-            if (n.lida) li.classList.add('lida');
-            
-            li.addEventListener('click', () => {
-                notificacoes[index].lida = true;
-                localStorage.setItem('notificacoes', JSON.stringify(notificacoes));
-                renderNotificacao();
-            });
-            listaNotificacao.appendChild(li);
-        });
-        atualizarContador();
-    }
-
-    function atualizarContador() {
-        const naoLidas = notificacoes.filter(n => !n.lida).length;
-        contador.textContent = naoLidas;
-        contador.style.display = naoLidas > 0 ? "block" : "none";
-    }
-
-    if (btnNotificacao && menuNotificacao) {
-        btnNotificacao.addEventListener("click", (evento) => {
-            menuNotificacao.classList.toggle("aberta");
-        });
-
-        document.addEventListener("click", (e) => {
-            if (!menuNotificacao.contains(e.target) && !btnNotificacao.contains(e.target)) {
-                menuNotificacao.classList.remove("aberta");
-            }
-
-        menuNotificacao.addEventListener("click", (e) => {
-            e.stopPropagation();
-            });
-        });
-    }
-
-    renderNotificacao();
 
     // Botão de Logout
     const btnLogout = document.getElementById('btn-logout')
